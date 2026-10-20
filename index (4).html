@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Colina de los Susurros · Halloween</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ===== 1. VARIABLES DE COLOR Y TIPOGRAFÍA ===== */
+:root{
+  --ink:#0d0b14; --bone:#ebe5d2; --pumpkin:#e8731a; --violet:#4a3470; --mist:#8fb5ab;
+  --titulo:"Creepster","Impact",fantasy; --texto:"IM Fell English","Georgia",serif;
+}
+/* ===== 2. CURSORES PERSONALIZADOS (SVG incrustados) ===== */
+html{scroll-behavior:smooth;
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cg stroke='%23ebe5d2' stroke-width='1.6' fill='none'%3E%3Cpath d='M16 16L4 6M16 16L2 14M16 16L3 24M16 16L8 29M16 16L28 6M16 16L30 14M16 16L29 24M16 16L24 29'/%3E%3C/g%3E%3Cellipse cx='16' cy='17' rx='5' ry='6' fill='%23ebe5d2'/%3E%3Ccircle cx='16' cy='11' r='3' fill='%23ebe5d2'/%3E%3Ccircle cx='15' cy='10.5' r='.9' fill='%23e8731a'/%3E%3Ccircle cx='17.5' cy='10.5' r='.9' fill='%23e8731a'/%3E%3C/svg%3E") 16 16,auto}
+a,button,.flip,.item{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M16 3C9 3 5 8 5 14c0 4 2 6 4 8v5h4v-3h2v3h4v-3h2v3h3v-5c2-2 4-4 4-8 0-6-4-11-11-11z' fill='%23ebe5d2' stroke='%23e8731a' stroke-width='1.5'/%3E%3Ccircle cx='11' cy='14' r='3.2' fill='%230d0b14'/%3E%3Ccircle cx='21' cy='14' r='3.2' fill='%230d0b14'/%3E%3Cpath d='M16 18l-2 4h4z' fill='%230d0b14'/%3E%3C/svg%3E") 16 16,pointer}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--bone);font:1.2rem/1.65 var(--texto);overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
+h1,h2,h3{font-family:var(--titulo);font-weight:400;letter-spacing:.04em;margin:0}
+h2{font-size:clamp(2.2rem,6vw,3.6rem);color:var(--pumpkin);text-shadow:3px 3px 0 var(--violet);margin-bottom:.4em}
+section{max-width:1000px;margin:0 auto;padding:5rem 1.2rem}
+p{max-width:62ch}
+/* ===== 3. NAVEGACIÓN ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;gap:1.4rem;justify-content:center;align-items:center;flex-wrap:wrap;padding:.6rem;background:linear-gradient(#0d0b14ee,#0d0b1400)}
+nav a{color:var(--bone);text-decoration:none;font-family:var(--titulo);font-size:1.3rem;letter-spacing:.06em}
+nav a:hover,nav a:focus-visible{color:var(--pumpkin);outline:none;text-decoration:underline wavy}
+#snd{font:1rem var(--texto);background:var(--ink);color:var(--bone);border:2px dashed var(--mist);padding:.2rem .8rem;border-radius:99px}
+/* ===== 4. HERO ===== */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+#hero h1{font-size:clamp(3rem,11vw,7.5rem);line-height:1;color:var(--bone);text-shadow:4px 4px 0 var(--violet),0 0 30px #e8731a55}
+#hero h1 span{display:inline-block;animation:wob 3.2s ease-in-out infinite;animation-delay:calc(var(--i)*-.25s)}
+#hero h1 .sp{width:.35em}
+@keyframes wob{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-6px)}}
+#hero p{font-style:italic;margin:1.2rem auto 2rem;font-size:1.4rem}
+.btn{font:1.6rem var(--titulo);letter-spacing:.06em;background:var(--pumpkin);color:var(--ink);border:0;padding:.5rem 1.6rem;text-decoration:none;display:inline-block;transform:rotate(-2deg);box-shadow:5px 5px 0 var(--violet);transition:transform .15s}
+.btn:hover,.btn:focus-visible{transform:rotate(2deg) scale(1.06);outline:none}
+/* ===== 5. PANELES CON BORDE DE RAYAS ===== */
+.panel{background:#0d0b14dd;padding:1.6rem;border:9px solid;border-image:repeating-linear-gradient(135deg,var(--bone) 0 10px,var(--ink) 10px 20px) 9}
+.opts{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem}
+.opts button,.tabs button{font:1.1rem var(--texto);background:var(--violet);color:var(--bone);border:2px solid var(--bone);padding:.4rem 1rem}
+.opts button:hover,.tabs button:hover,.tabs button[aria-selected=true]{background:var(--pumpkin);color:var(--ink)}
+.tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+#story-text{min-height:9rem}
+.fin{font-family:var(--titulo);color:var(--mist);font-size:1.6rem}
+/* ===== 6. TARJETAS QUE SE VOLTEAN ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.4rem}
+.flip{perspective:900px;height:230px;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:center}
+.flip>div{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.flip[aria-pressed=true]>div{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;padding:1rem;display:flex;flex-direction:column;justify-content:center;align-items:center;border:5px solid var(--bone);background:var(--ink)}
+.flip .f{font-family:var(--titulo);font-size:1.7rem;color:var(--pumpkin)}
+.flip .f i{font-style:normal;font-size:3rem}
+.flip .b{transform:rotateY(180deg);background:var(--violet);font-size:1.05rem;line-height:1.4}
+.flip:focus-visible .f,.flip:hover .f{border-color:var(--pumpkin)}
+/* ===== 7. JUEGOS ===== */
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.6rem}
+.games h3{color:var(--mist);font-size:2rem;margin-bottom:.5rem}
+#dark{position:relative;height:300px;overflow:hidden;background:#17121f;border:3px solid var(--bone);touch-action:none}
+.item{position:absolute;font-size:2.2rem;background:none;border:0;padding:0;filter:grayscale(.4)}
+.item.found{filter:drop-shadow(0 0 10px var(--pumpkin))}
+#veil{position:absolute;inset:0;pointer-events:none;--x:50%;--y:50%;background:radial-gradient(circle 95px at var(--x) var(--y),transparent 0,transparent 55%,#05040a 100%)}
+svg.pk{width:100%;max-width:260px;display:block;margin:0 auto}
+#oracle{min-height:5rem;font-style:italic;color:var(--bone)}
+.ghost{position:fixed;pointer-events:none;z-index:50;width:44px;animation:up 1.8s ease-out forwards}
+@keyframes up{to{transform:translateY(-140px) rotate(14deg);opacity:0}}
+footer{text-align:center;padding:3rem 1rem;color:var(--mist)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<nav>
+  <a href="#historias">Historias</a><a href="#curiosidades">Curiosidades</a>
+  <a href="#leyendas">Leyendas</a><a href="#juegos">Juegos</a>
+  <button id="snd" aria-pressed="false">🔇 Sonido: apagado</button>
+</nav>
+
+<section id="hero">
+  <h1 id="titulo">La Colina de los Susurros</h1>
+  <p>Un rincón de rayas, sombras y calabazas torcidas, donde todo lo raro es bienvenido.</p>
+  <a class="btn" href="#historias">Subir la colina</a>
+</section>
+
+<section id="historias">
+  <h2>Historias para no dormir (del todo)</h2>
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-s="A">El niño que coleccionaba sombras</button>
+      <button role="tab" aria-selected="false" data-s="B">Madame Marfil y el té de medianoche</button>
+    </div>
+    <p id="story-text" aria-live="polite"></p>
+    <div class="opts" id="story-opts"></div>
+  </div>
+</section>
+
+<section id="curiosidades">
+  <h2>Curiosidades del más allá</h2>
+  <p>Toca una tarjeta para darla vuelta.</p>
+  <div class="grid" id="cur"></div>
+</section>
+
+<section id="leyendas">
+  <h2>Leyendas que susurra el viento</h2>
+  <div class="panel">
+    <div class="tabs" id="leg-tabs" role="tablist"></div>
+    <h3 id="leg-title" style="font-size:2rem;color:var(--mist)"></h3>
+    <p id="leg-text"></p>
+  </div>
+</section>
+
+<section id="juegos">
+  <h2>Rincón interactivo</h2>
+  <div class="games">
+    <div class="panel">
+      <h3>La linterna</h3>
+      <p>Mueve la luz y encuentra a los 6 habitantes de la oscuridad. Tócalos para despertarlos.</p>
+      <div id="dark"><div id="veil"></div></div>
+      <p id="count">Encontrados: 0 / 6</p>
+    </div>
+    <div class="panel">
+      <h3>Talla tu calabaza</h3>
+      <svg class="pk" viewBox="0 0 200 200" role="img" aria-label="Calabaza tallada">
+        <path d="M100 38 C98 22 106 14 118 10 C112 22 112 30 108 38Z" fill="#3c5a3a"/>
+        <ellipse cx="55" cy="108" rx="48" ry="68" fill="#c85e10"/><ellipse cx="145" cy="108" rx="48" ry="68" fill="#c85e10"/>
+        <ellipse cx="100" cy="108" rx="52" ry="70" fill="#e8731a"/>
+        <path id="pk-eyes" fill="#2b1a08"/><path id="pk-mouth" fill="#2b1a08"/>
+      </svg>
+      <div class="opts">
+        <button id="b-eyes">Ojos</button><button id="b-mouth">Boca</button><button id="b-light">Vela</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>La vela oráculo</h3>
+      <p>Haz una pregunta en voz baja y deja que la llama conteste.</p>
+      <svg viewBox="0 0 80 110" style="width:90px;display:block;margin:0 auto" aria-hidden="true">
+        <path id="flame" d="M40 8 C28 30 24 40 32 52 C36 58 44 58 48 52 C56 40 50 28 40 8Z" fill="#ffb347"/>
+        <rect x="30" y="56" width="20" height="46" fill="#ebe5d2"/><rect x="39" y="52" width="2" height="8" fill="#0d0b14"/>
+      </svg>
+      <div class="opts"><button id="b-oracle">Preguntar a la llama</button></div>
+      <p id="oracle" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<footer>Hecho con asistencia de IA, mucha niebla y un poco de miedo. Proyecto grupal · Halloween 2026</footer>
+
+<script>
+/* ===== A. TÍTULO: cada letra es un <span> que se balancea ===== */
+const h1=document.getElementById("titulo"),txt=h1.textContent;h1.setAttribute("aria-label",txt);h1.textContent="";
+[...txt].forEach((ch,i)=>{const s=document.createElement("span");s.style.setProperty("--i",i);s.setAttribute("aria-hidden","true");s.textContent=ch===" "?"\u00a0":ch;if(ch===" ")s.className="sp";h1.appendChild(s)});
+
+/* ===== B. SONIDOS con Web Audio (sin archivos externos) ===== */
+let AC=null,on=false;
+const ac=()=>AC||(AC=new (window.AudioContext||window.webkitAudioContext)());
+function tone(f,t,type="sine",v=.07,f2){if(!on)return;const a=ac(),o=a.createOscillator(),g=a.createGain(),n=a.currentTime;
+  o.type=type;o.frequency.setValueAtTime(f,n);if(f2)o.frequency.exponentialRampToValueAtTime(f2,n+t);
+  g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.0001,n+t);o.connect(g).connect(a.destination);o.start();o.stop(n+t)}
+function noise(sec,decay){const a=ac(),b=a.createBuffer(1,a.sampleRate*sec,a.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(decay?Math.pow(1-i/d.length,2):1);return b}
+const sfx={
+  chirp:()=>tone(3200,.12,"sine",.04,5200),
+  creak:()=>{tone(70,.8,"sawtooth",.05,140);tone(95,.8,"square",.02,55)},
+  bell:()=>{tone(523,1.8,"sine",.08);tone(1046,1.4,"sine",.03);tone(785,1.6,"sine",.03)},
+  boo:()=>tone(220,.7,"sawtooth",.06,60),
+  thunder:()=>{if(!on)return;const a=ac(),s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
+    s.buffer=noise(3,true);f.type="lowpass";f.frequency.value=260;g.gain.value=.9;s.connect(f).connect(g).connect(a.destination);s.start()}
+};
+let ambientOn=false;
+function ambient(){ambientOn=true;const a=ac();
+  [55,55.7].forEach(fr=>{const o=a.createOscillator(),g=a.createGain();o.type="triangle";o.frequency.value=fr;g.gain.value=.05;o.connect(g).connect(a.destination);o.start()});
+  const w=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain(),l=a.createOscillator(),lg=a.createGain();
+  w.buffer=noise(2,false);w.loop=true;f.type="bandpass";f.frequency.value=450;g.gain.value=.03;l.frequency.value=.12;lg.gain.value=.025;
+  l.connect(lg).connect(g.gain);w.connect(f).connect(g).connect(a.destination);w.start();l.start()}
+const snd=document.getElementById("snd");
+snd.onclick=()=>{on=!on;ac();if(on){if(!ambientOn)ambient();AC.resume();sfx.creak()}else AC.suspend();
+  snd.setAttribute("aria-pressed",on);snd.textContent=on?"🔊 Sonido: encendido":"🔇 Sonido: apagado"};
+
+/* ===== C. FONDO ANIMADO: luna, colina, casa, árbol, murciélagos, niebla y relámpagos ===== */
+const cv=document.getElementById("bg"),c=cv.getContext("2d");
+let W,H,U,layer,seed=7,stars=[],house={x:0,y:0};
+const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+const gy=x=>H*.85-Math.max(0,1-Math.abs(x-W*.72)/(W*.45))*H*.2+Math.sin(x*.012)*4;
+function poly(s,pts,ox,oy,k){s.beginPath();pts.forEach((p,i)=>s[i?"lineTo":"moveTo"](ox+p[0]*k,oy+p[1]*k));s.closePath();s.fill()}
+function build(){
+  W=cv.width=innerWidth;H=cv.height=innerHeight;U=Math.min(W,H)/620;seed=7;
+  layer=document.createElement("canvas");layer.width=W;layer.height=H;const s=layer.getContext("2d");
+  const sky=s.createLinearGradient(0,0,0,H);sky.addColorStop(0,"#0a0814");sky.addColorStop(.6,"#2a1d45");sky.addColorStop(1,"#5a4a7a");
+  s.fillStyle=sky;s.fillRect(0,0,W,H);
+  stars=[];for(let i=0;i<90;i++){const st={x:rnd()*W,y:rnd()*H*.6,r:rnd()*1.4+.3,p:rnd()*6};stars.push(st);s.fillStyle="#ebe5d2aa";s.fillRect(st.x,st.y,st.r,st.r)}
+  // luna con halo y cráteres
+  const mx=W*.24,my=H*.22,mr=58*U,gl=s.createRadialGradient(mx,my,mr*.8,mx,my,mr*3);gl.addColorStop(0,"#ebe5d255");gl.addColorStop(1,"#ebe5d200");
+  s.fillStyle=gl;s.fillRect(0,0,W,H);s.fillStyle="#ebe5d2";s.beginPath();s.arc(mx,my,mr,0,7);s.fill();
+  s.fillStyle="#cfc7ae";[[-.3,-.2,.18],[.25,.1,.25],[-.1,.4,.12]].forEach(q=>{s.beginPath();s.arc(mx+q[0]*mr,my+q[1]*mr,q[2]*mr,0,7);s.fill()});
+  // colina
+  s.fillStyle="#0b0912";s.beginPath();s.moveTo(0,H);for(let x=0;x<=W;x+=8)s.lineTo(x,gy(x));s.lineTo(W,H);s.fill();
+  // casa embrujada torcida
+  const hx=W*.72,hy=gy(W*.72)+6,k=U*1.25;house={x:hx,y:hy,k};
+  poly(s,[[-70,5],[-66,-80],[70,-76],[74,5]],hx,hy,k);poly(s,[[-84,-78],[2,-152],[88,-74]],hx,hy,k);
+  poly(s,[[30,-76],[29,-185],[18,-186],[52,-262],[84,-184],[74,-185],[75,-76]],hx,hy,k);
+  poly(s,[[-70,-80],[-68,-160],[-80,-162],[-60,-222],[-42,-162],[-54,-160],[-54,-80]],hx,hy,k);
+  // árbol retorcido (ramas recursivas con curvas)
+  s.strokeStyle="#0b0912";s.lineCap="round";
+  (function br(x,y,l,a,w,d){if(d==0)return;const x2=x+Math.cos(a)*l,y2=y+Math.sin(a)*l;s.lineWidth=w;s.beginPath();s.moveTo(x,y);
+    s.quadraticCurveTo(x+Math.cos(a+(rnd()-.5)*1.4)*l*.6,y+Math.sin(a+(rnd()-.5)*1.4)*l*.6,x2,y2);s.stroke();
+    const n=rnd()>.65?3:2;for(let i=0;i<n;i++)br(x2,y2,l*(.7+rnd()*.14),a+(rnd()-.5)*1.7,w*.7,d-1)})(W*.13,gy(W*.13)+10,78*U,-Math.PI/2,13*U,8);
+  // lápidas torcidas
+  s.fillStyle="#0b0912";for(let i=0;i<16;i++){const x=rnd()*W,y=gy(x)+10+rnd()*30,w=(14+rnd()*12)*U,h=(22+rnd()*22)*U;
+    s.save();s.translate(x,y);s.rotate((rnd()-.5)*.5);s.beginPath();s.moveTo(-w/2,0);s.lineTo(-w/2,-h);s.arc(0,-h,w/2,Math.PI,0);s.lineTo(w/2,0);s.fill();s.restore()}
+}
+const bats=Array.from({length:13},(_,i)=>({x:Math.random()*2000,y:60+Math.random()*320,v:(Math.random()*1.4+.7)*(i%4?1:-1),s:6+Math.random()*9,p:Math.random()*9}));
+const fog=Array.from({length:8},(_,i)=>({x:i*260,y:.72+Math.random()*.25,r:260+Math.random()*180,v:.1+Math.random()*.25}));
+function bat(x,y,s,f){c.save();c.translate(x,y);c.fillStyle="#050408";c.beginPath();c.ellipse(0,0,s*.3,s*.5,0,0,7);c.fill();
+  c.beginPath();c.moveTo(-s*.25,-s*.4);c.lineTo(-s*.15,-s*.8);c.lineTo(0,-s*.45);c.lineTo(s*.15,-s*.8);c.lineTo(s*.25,-s*.4);c.fill();
+  for(const d of[-1,1]){c.beginPath();c.moveTo(0,-s*.1);c.quadraticCurveTo(d*s*.9,-s*(.7+f*.7),d*s*1.8,-s*(.1+f*.6));
+    c.quadraticCurveTo(d*s*1.3,s*.1,d*s*1.05,s*.35);c.quadraticCurveTo(d*s*.7,s*.05,d*s*.45,s*.45);c.lineTo(0,s*.3);c.fill()}c.restore()}
+let flash=0,nextBolt=8e3;
+function frame(t){
+  c.drawImage(layer,0,0);
+  stars.forEach(s=>{if(Math.sin(t/600+s.p)>.85){c.fillStyle="#fff";c.fillRect(s.x,s.y,s.r+1,s.r+1)}});
+  // ventanas parpadeantes de la casa
+  const f=.75+.25*Math.sin(t/90)*Math.sin(t/230),{x:hx,y:hy,k}=house;
+  c.fillStyle=`rgba(255,170,60,${f})`;c.shadowColor="#ffa23c";c.shadowBlur=18;
+  [[-40,-45,14,22],[10,-45,14,22],[44,-130,12,22],[-62,-130,8,18],[-18,-110,12,14]].forEach(w=>c.fillRect(hx+w[0]*k,hy+w[1]*k,w[2]*k,w[3]*k));c.shadowBlur=0;
+  bats.forEach(b=>{b.x+=b.v;if(b.x>W+90)b.x=-90;if(b.x<-90)b.x=W+90;bat(b.x,b.y+Math.sin(t/700+b.p)*28,b.s*U*1.1,Math.sin(t/70+b.p)*.5)});
+  fog.forEach(o=>{o.x+=o.v;if(o.x-o.r>W)o.x=-o.r;const y=o.y*H,g=c.createRadialGradient(o.x,y,0,o.x,y,o.r);
+    g.addColorStop(0,"rgba(200,215,220,.13)");g.addColorStop(1,"rgba(200,215,220,0)");c.fillStyle=g;c.fillRect(o.x-o.r,y-o.r,o.r*2,o.r*2)});
+  if(t>nextBolt){flash=1;nextBolt=t+12e3+Math.random()*14e3;setTimeout(sfx.thunder,350)}
+  if(flash>0){c.fillStyle=`rgba(210,220,255,${flash*.4})`;c.fillRect(0,0,W,H);flash-=.04}
+  requestAnimationFrame(frame)}
+addEventListener("resize",build);build();requestAnimationFrame(frame);
+
+/* ===== D. FANTASMITAS AL HACER CLIC ===== */
+const ghostSVG="<svg viewBox='0 0 40 48' xmlns='http://www.w3.org/2000/svg'><path d='M4 46V20C4 8 12 2 20 2s16 6 16 18v26l-6-6-5 6-5-6-5 6-5-6z' fill='#ebe5d2'/><ellipse cx='14' cy='20' rx='3' ry='5' fill='#0d0b14'/><ellipse cx='26' cy='20' rx='3' ry='5' fill='#0d0b14'/><ellipse cx='20' cy='31' rx='3' ry='4' fill='#0d0b14'/></svg>";
+document.addEventListener("click",e=>{if(e.target.closest("button,a"))return;const g=document.createElement("div");g.className="ghost";
+  g.style.left=e.clientX-22+"px";g.style.top=e.clientY-22+"px";g.innerHTML=ghostSVG;document.body.appendChild(g);setTimeout(()=>g.remove(),1800);sfx.chirp()});
+
+/* ===== E. HISTORIAS CON FINALES (cada nodo: texto + opciones) ===== */
+const stories={
+A:{s:["Eliot vivía en la casa más torcida de la colina. Cada noche, su sombra se despegaba de la pared y salía a pasear sin él. Esta noche, dejó la puerta entreabierta.",[["Seguirla al jardín","a1"],["Quedarse esperando","a2"]]],
+ a1:["En el jardín, cientos de sombras bailaban alrededor de un árbol sin hojas. Una, muy pequeña, tiraba de tu manga: quería un nombre.",[["Darle un nombre","a3"],["Huir hacia la casa","a4"]]],
+ a2:["Esperaste hasta que el reloj hizo tictac al revés. La sombra volvió con una luciérnaga atrapada y te la dejó en la almohada. Dormiste, por primera vez, sin miedo.","Final: La luz compartida"],
+ a3:["La llamaste Pimienta. Las sombras aplaudieron sin hacer ruido y el árbol se llenó de flores negras. Desde esa noche, nunca estás solo en la oscuridad.","Final: El jardín florecido"],
+ a4:["Corriste, pero la casa ya no estaba: solo una escalera en espiral que sube hacia la luna. Quizá alguien te espere arriba, con el té servido.","Final: La espiral"]},
+B:{s:["Madame Marfil, una fantasma de rayas blancas y negras, ofrece un té cada medianoche, pero nadie viene: los vivos le temen. Hoy te llegó una invitación escrita con tinta de murciélago.",[["Ir a la fiesta","b1"],["Quemar la invitación","b2"]]],
+ b1:["La fiesta era en una cripta: esqueletos tocando violines desafinados y una araña sirviendo té en dedales. Te ofrecen dos tazas: una humea verde, la otra azul.",[["Beber la verde","b3"],["Beber la azul","b4"]]],
+ b2:["Las cenizas formaron una frase: “Qué pena, hubiéramos sido buenos amigos”. Desde entonces, cada medianoche, algo suspira bajo tu ventana.","Final: El suspiro"],
+ b3:["Sabía a menta y a recuerdo. Viste todas las fiestas de Halloween que alguna vez se celebraron y descubriste que tú estabas en todas.","Final: El invitado eterno"],
+ b4:["Sabía a lluvia. Te volviste transparente de la risa y Madame Marfil te enseñó a atravesar paredes. Tu primera visita: la cocina de tu abuela.","Final: El fantasma travieso"]}};
+const stx=document.getElementById("story-text"),sop=document.getElementById("story-opts");let cur="A",typer;
+function show(node){clearInterval(typer);sop.innerHTML="";stx.textContent="";let i=0;sfx.creak();
+  typer=setInterval(()=>{stx.textContent=node[0].slice(0,++i);if(i>=node[0].length){clearInterval(typer);options(node)}},22)}
+function options(node){const o=node[1];
+  if(typeof o==="string"){stx.insertAdjacentHTML("beforeend",`<br><span class="fin">${o}</span>`);mk("Volver a empezar",()=>show(stories[cur].s));sfx.bell()}
+  else o.forEach(([l,n])=>mk(l,()=>show(stories[cur][n])))}
+function mk(l,fn){const b=document.createElement("button");b.textContent=l;b.onclick=fn;sop.appendChild(b)}
+document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-s]").forEach(x=>x.setAttribute("aria-selected",x===b));cur=b.dataset.s;show(stories[cur].s)});
+show(stories.A.s);
+
+/* ===== F. CURIOSIDADES (tarjetas) ===== */
+const cur_=[
+["🎃","Samhain","Halloween nace de Samhain, un festival celta de hace más de 2000 años que marcaba el fin de la cosecha. Se creía que esa noche los muertos cruzaban al mundo de los vivos."],
+["🥔","Nabos, no calabazas","En Irlanda las primeras linternas se tallaban en nabos. Al llegar a América, los inmigrantes descubrieron que las calabazas eran más grandes y fáciles de tallar."],
+["🍬","Dulce o truco","Viene de una costumbre medieval: los niños pedían “pasteles de alma” de casa en casa y rezaban por los difuntos a cambio."],
+["🦇","Más de 1400 especies","Hay más de 1400 especies de murciélagos en el mundo. Son los únicos mamíferos que realmente vuelan y cuidan las cosechas comiendo insectos."],
+["🐈‍⬛","Gatos negros","En la Edad Media se los asociaba con brujas, pero en otras culturas, como la japonesa, se los considera símbolo de buena suerte."],
+["🎬","El mundo de Burton","Tim Burton nació en Burbank en 1958. Dibujaba monstruos desde niño, y su estilo mezcla el expresionismo alemán, el cine de terror clásico y los libros de Dr. Seuss."]];
+document.getElementById("cur").innerHTML=cur_.map(x=>`<button class="flip" aria-pressed="false"><div><span class="f"><i>${x[0]}</i>${x[1]}</span><span class="b">${x[2]}</span></div></button>`).join("");
+document.querySelectorAll(".flip").forEach(b=>b.onclick=()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");sfx.creak()});
+
+/* ===== G. LEYENDAS (pestañas) ===== */
+const leg=[
+["La Luz Mala","En el campo argentino y paraguayo se habla de una luz pálida que flota a ras del suelo en las noches sin luna. Unos dicen que son almas en pena; otros, que marca un tesoro enterrado. La sabiduría popular manda no acercarse ni mirarla fijo."],
+["El Pombero","Espíritu guaraní de la noche, de pasos silenciosos y silbido que se oye desde todos lados. Protege a los animales del monte, pero molesta a quienes lo ofenden. Para ganarse su favor, se le deja una ofrenda de tabaco y miel."],
+["Jack el Tacaño","Un irlandés que engañó al diablo y no fue aceptado ni en el cielo ni en el infierno. Condenado a vagar en la noche, lleva un carbón encendido dentro de un nabo: el origen de la linterna de Halloween."],
+["La Llorona","Una mujer de blanco que recorre ríos y calles llorando por sus hijos perdidos. Su lamento se oye de lejos y, según la leyenda mexicana, cuanto más lejos suena, más cerca está."]];
+const lt=document.getElementById("leg-tabs");
+leg.forEach((l,i)=>{const b=document.createElement("button");b.textContent=l[0];b.setAttribute("role","tab");b.setAttribute("aria-selected",i==0);
+  b.onclick=()=>{[...lt.children].forEach(x=>x.setAttribute("aria-selected",x===b));ver(i);sfx.boo()};lt.appendChild(b)});
+function ver(i){document.getElementById("leg-title").textContent=leg[i][0];document.getElementById("leg-text").textContent=leg[i][1]}ver(0);
+
+/* ===== H. JUEGO 1: LA LINTERNA ===== */
+const dark=document.getElementById("dark"),veil=document.getElementById("veil");let found=0;
+["👻","🦇","🕷️","💀","👁️","🎃"].forEach((e,i)=>{const b=document.createElement("button");b.className="item";b.textContent=e;b.setAttribute("aria-label","Criatura escondida");
+  b.style.left=8+Math.random()*78+"%";b.style.top=8+Math.random()*76+"%";
+  b.onclick=()=>{if(b.classList.contains("found"))return;b.classList.add("found");found++;document.getElementById("count").textContent=found==6?"¡Los encontraste a todos! Ahora te siguen.":`Encontrados: ${found} / 6`;sfx.boo()};dark.prepend(b)});
+dark.addEventListener("pointermove",e=>{const r=dark.getBoundingClientRect();veil.style.setProperty("--x",e.clientX-r.left+"px");veil.style.setProperty("--y",e.clientY-r.top+"px")});
+
+/* ===== I. JUEGO 2: CALABAZA ===== */
+const eyes=["M45 85L75 85L60 58ZM125 85L155 85L140 58Z","M60 70m-15 0a15 15 0 1 0 30 0a15 15 0 1 0-30 0M140 70m-15 0a15 15 0 1 0 30 0a15 15 0 1 0-30 0","M42 78Q65 52 90 80Q65 68 42 78ZM110 80Q135 52 158 78Q135 68 110 80Z"];
+const mouths=["M50 112L66 130L82 112L100 134L118 112L134 130L150 112L140 152Q100 176 60 152Z","M52 112Q100 178 148 112Q100 138 52 112Z","M66 132L78 118L90 136L100 118L110 136L122 118L134 132L122 152Q100 162 78 152Z"];
+let ie=0,im=0,lit=true;const pe=document.getElementById("pk-eyes"),pm=document.getElementById("pk-mouth");
+function pk(){pe.setAttribute("d",eyes[ie]);pm.setAttribute("d",mouths[im]);pe.style.fill=pm.style.fill=lit?"#ffd27a":"#2b1a08";pe.style.filter=pm.style.filter=lit?"drop-shadow(0 0 6px #ffb347)":"none"}
+document.getElementById("b-eyes").onclick=()=>{ie=(ie+1)%3;pk();sfx.chirp()};
+document.getElementById("b-mouth").onclick=()=>{im=(im+1)%3;pk();sfx.chirp()};
+document.getElementById("b-light").onclick=()=>{lit=!lit;pk();sfx.boo()};pk();
+
+/* ===== J. JUEGO 3: LA VELA ORÁCULO ===== */
+const prof=["La llama dice que sí, pero primero toca a la puerta tres veces.","Una sombra amiga ya viene en camino. No la asustes.","Las respuestas están donde nadie mira: debajo de la cama, quizá.","Ahora no. Los búhos todavía están discutiendo el asunto.","Sí, aunque con rayas. Todo mejora con rayas.","La luna se rio con tu pregunta. Eso es una buena señal.","Cuidado con los espejos después de medianoche: son cotillas.","Sonríe al fantasma de la escalera y te dejará pasar."];
+document.getElementById("b-oracle").onclick=()=>{document.getElementById("oracle").textContent=prof[Math.floor(Math.random()*prof.length)];
+  const f=document.getElementById("flame");f.animate([{transform:"scale(1)"},{transform:"scale(1.4,.8)"},{transform:"scale(1)"}],{duration:400});f.style.transformOrigin="40px 55px";sfx.bell()};
+</script>
+</body>
+</html>
